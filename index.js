@@ -13,10 +13,12 @@ const app=express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-app.use(router);
+//app.use(router);
 app.use(cors());
-app.use(express.static(path.join(__dirname, "client", "build")))
-
+app.use(express.static(path.join(__dirname, "build")))
+app.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 io.on('connect', (socket)=>{
     console.log('we have a new connection!');
@@ -52,8 +54,6 @@ io.on('connect', (socket)=>{
         }
     })
 });
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-});
-server.listen(PORT, () => console.log(`Server has started on port ${PORT}`));
+
+server.listen(PORT,()=>console.log(`server is running on port ${PORT}`));
 
